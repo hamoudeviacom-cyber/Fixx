@@ -8,6 +8,9 @@
   "author": "mi.dd",
   "license": "ISC",
   "description": "",
+  "engines": {
+    "node": "20.x"
+  },
   "dependencies": {
     "@discordjs/voice": "^0.16.1",
     "@google-cloud/text-to-speech": "^5.0.2",
