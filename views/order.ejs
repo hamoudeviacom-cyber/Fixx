@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فاتورة طلب الاعضاء</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #e0e0e0;
+            background-color: #121212;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .invoice-container {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 30px;
+            width: 80%;
+            max-width: 700px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        h1 {
+            text-align: center;
+            color: #ffa726;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+        }
+        .section-title {
+            font-size: 1.2em;
+            color: #ffb74d;
+            border-bottom: 1px solid #444;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+        }
+        .info-section {
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 1em;
+            color: #e0e0e0;
+        }
+        .info-item img {
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            border: 2px solid #ffa726;
+        }
+        .order-total {
+            text-align: center;
+            margin-top: 20px;
+            color: #ffd54f;
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+        .download-btn {
+            display: block;
+            background-color: #FF5722;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            width: 100%;
+            text-align: center;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+        .download-btn:hover {
+            background-color: #FF7043;
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-container">
+        <h1>فاتورة الطلب</h1>
+
+        <!-- معلومات الشخص المشتري -->
+        <div class="info-section">
+            <div class="section-title">معلومات الشخص المشتري</div>
+            <div class="info-item">
+                <span>الاسم:</span>
+                <span><%= userBuyer.displayName %></span>
+            </div>
+            <div class="info-item">
+                <span>الأيدي:</span>
+                <span><%= userBuyer.id %></span>
+            </div>
+            <div class="info-item">
+                <span><img src="<%= userBuyer.avatarURL() %>" alt="صورة المشتري"></span>
+            </div>
+        </div>
+
+        <!-- بيانات الطلب -->
+        <div class="info-section">
+            <div class="section-title">بيانات الطلب</div>
+            <div class="info-item">
+                <span>نوع الطلب:</span>
+                <span><%= order.Type %></span>
+            </div>
+            <div class="info-item">
+                <span>الكمية المطلوبة:</span>
+                <span><%= amount %> عضو</span>
+            </div>
+            <div class="info-item">
+                <span>عدد الاعضاء فالسيرفر بعد الاضافة:</span>
+                <span><%= estimatedMemberCount %> عضو</span>
+            </div>
+        </div>
+
+        <!-- بيانات السيرفر -->
+        <div class="info-section">
+            <div class="section-title">بيانات السيرفر</div>
+            <div class="info-item">
+                <span>اسم السيرفر:</span>
+                <span><%= guild.name %></span>
+            </div>
+            <div class="info-item">
+                <span>الأيدي:</span>
+                <span><%= guild.id %></span>
+            </div>
+            <div class="info-item">
+                <span>عدد الأعضاء الحالي:</span>
+                <span><%= guild.memberCount %> عضو</span>
+            </div>
+            <div class="info-item">
+                <span>صورة السيرفر:</span>
+                <span><img src="<%= guild.iconURL %>" alt="صورة السيرفر"></span>
+            </div>
+        </div>
+
+
+        <div class="order-total">
+            إجمالي الطلب: <%= amount %> عضو
+        </div>
+
+ 
+    </div>
+</body>
+</html>
