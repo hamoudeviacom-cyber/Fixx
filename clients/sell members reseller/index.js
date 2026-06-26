@@ -1,5 +1,6 @@
 const { readdirSync, statSync } = require('fs');
-require("dotenv").config();
+// Railway بيدير الـ env vars تلقائياً
+// require("dotenv").config();
 const Discord = require('discord.js')
 /////////////////////// بكجات ///////////////////////
 const logAndReturn = (value) => console.log(value);
@@ -27,6 +28,12 @@ const oauth = new OAuth2({
     clientSecret: process.env.CLIENT_SECRET,
     redirectUri: process.env.REDIRECT_URI,
   });
+
+  // التحقق من الـ OAuth env vars
+  if (!process.env.CLIENT_ID || !process.env.CLIENT_SECRET || !process.env.REDIRECT_URI) {
+    console.error('[FATAL] OAuth env vars missing. Set CLIENT_ID, CLIENT_SECRET, REDIRECT_URI in Railway.');
+    process.exit(1);
+  }
   
 
 function formatNumber(num) {
