@@ -1,55 +1,25 @@
-const { client  , settings} = require('../../index')
+const { client, settings } = require('../../index')
 /////////////////////// بكجات ///////////////////////
-const { Intents, Collection, Client, GuildMember, MessageActionRow, WebhookClient,MessagePayload, GatewayIntentBits, MessageSelectMenu, Modal, MessageEmbed,MessageButton, MessageAttachment, Permissions, TextInputComponent} = require('discord.js');
-const chalk = require('chalk')
-const {CommandCooldown, msToMinutes} = require('discord-command-cooldown');
+const { Intents, Collection, Client, GuildMember, MessageActionRow, WebhookClient, MessagePayload, GatewayIntentBits, MessageSelectMenu, Modal, MessageEmbed, MessageButton, MessageAttachment, Permissions, TextInputComponent } = require('discord.js');
+const chalk = require('chalk');
+const { CommandCooldown, msToMinutes } = require('discord-command-cooldown');
 const { createEmbed } = require('../../function/function/Embed');
 const checkCredits = require('../../function/function/checkCredits');
- const Canvas = require('@napi-rs/canvas')
-const {path , join} = require('path');
+const Canvas = require('@napi-rs/canvas');
+const { path, join } = require('path');
 const moment = require('moment');
 const OAuth2 = require('discord-oauth2');
 const { لون_الامبيد } = require('../../config/settings');
 const Members = require('../../models/members');
 const ServerSettings = require('../../models/settings');
 
+// OAuth2 - كل القيم من Railway env
 const oauth = new OAuth2({
     clientId: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
     redirectUri: process.env.REDIRECT_URI,
-      scope: 'guilds',
+    scope: 'guilds',
 });
-
-
-client.on('messageCreate', async (message) => {
-    if (message.author.bot) return;
-    if (!message.content.startsWith(settings.prefix)) return;
-    const args = message.content.slice(settings.prefix.length).trim().split(/ +/);
-    const command = args.shift().toLowerCase();
-
-    if (command === 'setup-ticket') {
-        if (!settings.Owners.includes(message.author.id)) return
-
-        const embed = new MessageEmbed()
-            .setTitle('تكت الشراء')
-            .setDescription('**اضغط على الزر ليتم انشاء تذكرة**')
-            .setThumbnail(message.guild.iconURL({ dynamic: true, size: 512 }))
-            .setAuthor(message.guild.name, message.guild.iconURL({ dynamic: true, size: 512 }))
-            .setColor(لون_الامبيد);
-
-        const row = new MessageActionRow().addComponents(
-            new MessageButton()
-                .setCustomId('create_ticket')
-                .setLabel('إنشاء تذكرة')
-                .setStyle('SUCCESS')
-        );
-
-        await message.channel.send({ embeds: [embed], components: [row] });
-    }
-});
-
-
-
 
 client.on('interactionCreate', async (interaction) => {
     if (!interaction.isButton()) return;
@@ -58,7 +28,7 @@ client.on('interactionCreate', async (interaction) => {
         await interaction.deferReply({ ephemeral: true });
         const guild = interaction.guild;
         const Data = await ServerSettings.findOne({});
-        let category = guild.channels.cache.find(channel => 
+        let category = guild.channels.cache.find(channel =>
             channel.type === 'GUILD_CATEGORY' && channel.name === 'members ticket'
         );
 
@@ -72,18 +42,12 @@ client.on('interactionCreate', async (interaction) => {
             type: 'GUILD_TEXT',
             parent: category.id,
             permissionOverwrites: [
-                {
-                    id: guild.id,
-                    deny: ['VIEW_CHANNEL'] 
-                },
-                {
-                    id: interaction.user.id,
-                    allow: ['VIEW_CHANNEL', 'SEND_MESSAGES', 'ATTACH_FILES' , 'USE_APPLICATION_COMMANDS']
-                }
+                { id: guild.id, deny: ['VIEW_CHANNEL'] },
+                { id: interaction.user.id, allow: ['VIEW_CHANNEL', 'SEND_MESSAGES', 'ATTACH_FILES', 'USE_APPLICATION_COMMANDS'] }
             ]
         });
 
-        const Log = await client.channels.cache.get(Data.logChannel)
+        const Log = await client.channels.cache.get(Data.logChannel);
 
         const embed = new MessageEmbed()
             .setColor(لون_الامبيد)
@@ -109,20 +73,18 @@ client.on('interactionCreate', async (interaction) => {
             new MessageButton()
                 .setCustomId('buy_reseller')
                 .setLabel('شراء الريسيلر')
-                .setStyle('SUCCESS')
-
-                new MessageButton()
+                .setStyle('SUCCESS'),
+            new MessageButton()
                 .setCustomId('delete_ticket')
                 .setLabel('مسح التذكرة')
-                .setStyle('DANGER'), 
+                .setStyle('DANGER'),
         );
 
         await ticketChannel.send({ content: `<@${interaction.user.id}>`, embeds: [embed], components: [row] });
 
-       
         await interaction.editReply({ content: `تم إنشاء تذكرتك بنجاح : ${ticketChannel}`, ephemeral: true });
 
-        setTimeout( async () => {
+        setTimeout(async () => {
             await interaction.deleteReply();
         }, 3000);
 
@@ -138,21 +100,16 @@ client.on('interactionCreate', async (interaction) => {
                 )
                 .setFooter({ text: 'لوج تذاكر الاعضاء الخفم', iconURL: guild.iconURL({ dynamic: true }) })
                 .setTimestamp();
-
             Log.send({ embeds: [logEmbed] });
         }
-
     }
 });
-
 
 client.on('interactionCreate', async (interaction) => {
     if (!interaction.isButton()) return;
     if (interaction.customId === 'delete_ticket') {
-      
         await interaction.reply({ content: 'جاري مسح التذكرة', ephemeral: true });
-
-        setTimeout( async () => {
+        setTimeout(async () => {
             await interaction.channel.delete();
         }, 3000);
     }
