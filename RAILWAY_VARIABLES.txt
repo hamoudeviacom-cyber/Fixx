@@ -1,0 +1,26 @@
+==============================================
+Railway Variables - انسخهم في Variables tab
+==============================================
+
+TOKEN=YOUR_RESET_BOT_TOKEN_HERE
+MONGODB_URI=mongodb+srv://mohamedwahbi011_db_user:kbuibvc@cluster0.fgrrs3j.mongodb.net/?appName=Cluster0
+CLIENT_ID=1518997762669150459
+CLIENT_SECRET=YOUR_RESET_CLIENT_SECRET_HERE
+REDIRECT_URI=https://fixx-production.up.railway.app/oauth/callback
+
+==============================================
+Discord OAuth2 Redirects - أضفهم في Developer Portal
+==============================================
+
+https://fixx-production.up.railway.app/oauth/callback
+https://fixx-production.up.railway.app/members/add
+
+==============================================
+مهم جداً قبل Deploy
+==============================================
+
+1. Reset Bot Token في Discord Developer Portal
+2. Reset Client Secret في Discord Developer Portal
+3. غيّر باسورد MongoDB
+4. أضف المتغيرات الخمسة في Railway Variables
+5. أضف الـ Redirects في Discord OAuth2

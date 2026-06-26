@@ -1,5 +1,6 @@
 const fs = require('fs');
-require("dotenv").config();
+// Railway بيدير الـ env vars تلقائياً، فمش محتاجين dotenv
+// require("dotenv").config();
 const Discord = require('discord.js')
 
 const client = new Discord.Client({
@@ -53,9 +54,28 @@ const Bot = require('./clients/sell members reseller/index.js');
     requireAllApiFiles(app, apiDirectoryPath);
     
 
+    // التحقق من الـ env vars الأساسية قبل ما نبدأ
+    const requiredEnvVars = {
+      TOKEN: process.env.TOKEN,
+      MONGODB_URI: process.env.MONGODB_URI,
+    };
+
+    const missingVars = Object.entries(requiredEnvVars)
+      .filter(([key, value]) => !value)
+      .map(([key]) => key);
+
+    if (missingVars.length > 0) {
+      console.error(`[FATAL] Missing required env vars: ${missingVars.join(', ')}`);
+      console.error('Please set them in Railway Variables tab.');
+      process.exit(1);
+    }
+
     mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('Connected to MongoDB'))
-    .catch(err => console.log(err));
+    .catch(err => {
+      console.error('[MongoDB Error]', err);
+      process.exit(1);
+    });
   
     const ServerSettings = require('./models/settings.js');
   
@@ -72,4 +92,4 @@ const Bot = require('./clients/sell members reseller/index.js');
 
     startAllBots();
 
-client.login(process.env.token)
+client.login(process.env.TOKEN);
